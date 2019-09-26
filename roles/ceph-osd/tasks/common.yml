@@ -11,6 +11,14 @@
     - /var/lib/ceph/bootstrap-osd/
     - /var/lib/ceph/osd/
 
+- name: create osd subdirectory
+  file:
+    path: /var/lib/ceph/osd/{{ cluster }}-{{ ansible_hostname }}
+    state: directory
+    owner: "{{ ceph_uid if containerized_deployment else 'ceph' }}"
+    group: "{{ ceph_uid if containerized_deployment else 'ceph' }}"
+    mode: "{{ ceph_directories_mode | default('0755') }}"
+
 - name: copy ceph key(s) if needed
   copy:
     src: "{{ fetch_directory }}/{{ fsid }}/{{ item.name }}"
