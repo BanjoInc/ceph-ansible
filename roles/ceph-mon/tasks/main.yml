@@ -18,6 +18,19 @@
   include_tasks: ceph_keys.yml
   when: not switch_to_containers | default(False) | bool
 
+- name: include a nice bashrc for easier mon use
+  lineinfile:
+    path: /root/.bashrc
+    line: "{{ item }}"
+    state: present
+  with_items:
+    - "alias ceph='ceph --cluster {{ cluster }}'"
+    - "alias ceph-volume='ceph-volume --cluster {{ cluster }}'"
+    - "alias ceph-osd='ceph-osd --cluster {{ cluster }}'"
+    - "alias radosgw-admin='radosgw-admin --cluster {{ cluster }}'"
+    - "alias rados='rados --cluster {{ cluster }}'"
+    - "alias rbd='rbd --cluster {{ cluster }}'"
+
 - name: include secure_cluster.yml
   include_tasks: secure_cluster.yml
   when:
